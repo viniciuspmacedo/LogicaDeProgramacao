@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="utf-8">
+	<!-- Normalize CSS -->
+	<link rel="stylesheet" type="text/css" href="normalize.css">
+	<!-- Folha de Estilo CSS -->
+	<link rel="stylesheet" type="text/css" href="estilo.css">
+
+	<!--[if lt IE 9]>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<![endif]-->
+	<title>Tiro ao Alvo</title>
+</head>
+<body>
+    
+    <canvas width="600" height="400">
+
+    </canvas>
+
+	<script>
+
+        var tela = document.querySelector('canvas');
+        var caneta = tela.getContext('2d');
+
+        //código para 'desenhar' o canvas
+        
+        function desenhaTela(){
+        caneta.strokeStyle = 'black';
+        caneta.strokeRect(0, 0, 600, 400);
+        }
+        
+        //código para desenhar o alvo dentro do canvas
+
+        function desenhaCirculo( x, y, raio, cor){
+            caneta.fillStyle = cor;
+            caneta.beginPath();
+            caneta.arc(x , y, raio, 0, 2 * Math.PI);
+            caneta.fill();
+        }
+
+        var raio = 10;
+        var xAleatorio;
+        var yAleatorio;
+
+        function desenhaAlvo(x, y){
+        
+            desenhaCirculo(x, y, raio + 20, 'red');
+            desenhaCirculo(x, y, raio + 10, 'white');
+            desenhaCirculo(x, y, raio, 'red');
+        
+        }
+
+        function sorteiaPosicao(maximo){
+
+            return Math.floor(Math.random() * maximo)
+
+        }
+
+        function limpaTela(){
+            caneta.clearRect(0, 0, 600, 400)
+            desenhaTela();
+        }
+
+        function atualizaTela(){
+        limpaTela();
+        xAleatorio = sorteiaPosicao(600);
+        yAleatorio = sorteiaPosicao(400);
+
+        desenhaAlvo(xAleatorio, yAleatorio);
+        
+        }
+        
+        desenhaTela();
+        setInterval(atualizaTela, 2000);
+
+        function dispara(evento){
+            var x = evento.pageX - tela.offsetLeft;
+            var y = evento.pageY - tela.offsetTop;
+            if( (x > xAleatorio - raio) 
+                && (x < xAleatorio + raio)
+                && (y > yAleatorio - raio)
+                && (y < yAleatorio + raio)){
+                
+                    alert('Acertou!')
+            }
+            
+        }
+
+        tela.onclick = dispara; //executa a função 'dispara' sempre que o canvas for clicado
+    
+    </script>
+</body>
+</html>
